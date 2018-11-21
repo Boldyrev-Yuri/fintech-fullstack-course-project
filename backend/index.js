@@ -9,12 +9,16 @@ import SourceMapSupport from 'source-map-support';
 import connectString from './mongodbConnect';
 // import taskRoutes from './routes/taskRoutes';
 import userRoutes from './routes/userRoutes';
+import passportUser from './passportUser';
 
 const app = express();
 
 // connect to database
 mongoose.Promise = global.Promise;
-mongoose.connect(connectString, { useNewUrlParser: true }).then(
+mongoose.connect(
+  connectString,
+  { useCreateIndex: true, useNewUrlParser: true }
+).then(
   () => { console.log('Подключение к БД установлено'); },
   err => { console.log(`Ошибка при подключении к БД: ${err}`); }
 );
@@ -24,7 +28,8 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Ошибка соединения с MongoDB'));
 
 app.use(passport.initialize());
-require('./passportUser')(passport);
+// require('./passportUser')(passport);
+passportUser(passport);
 
 // allow-cors
 // app.use((req, res, next) => {

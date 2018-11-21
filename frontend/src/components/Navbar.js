@@ -52,4 +52,4 @@ const mapStateToProps = state => ({
 });
 
 // export default connect(mapStateToProps, { logoutUser })(withRouter(Navbar));
-export default withRouter(connect(mapStateToProps, { logoutUser }));
+export default withRouter(connect(mapStateToProps, { logoutUser })(Navbar));
