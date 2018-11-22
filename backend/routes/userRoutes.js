@@ -48,13 +48,13 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  const {
-    errors, isValid, email, password
-  } = validateLoginInput(req.body);
+  const { errors, isValid } = validateLoginInput(req.body);
+  const { email, password } = req.body;
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
+  console.log(errors, isValid, email, password);
 
   User.findOne({ email }).then(user => {
     if (!user) {

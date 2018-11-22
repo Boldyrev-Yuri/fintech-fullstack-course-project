@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { jwt_decode as jwtDecode } from 'jwt-decode';
+import * as jwtDecode from 'jwt-decode';
 import store from './store';
 import setAuthToken from './setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authentication';

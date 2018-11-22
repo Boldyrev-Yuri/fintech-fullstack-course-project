@@ -48,7 +48,7 @@ class Register extends Component {
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
-      password_confirm: this.state.passwordConfirm
+      passwordConfirm: this.state.passwordConfirm
     };
 
     this.props.registerUser(user, this.props.history);
@@ -107,7 +107,7 @@ class Register extends Component {
               className={classnames('form-control form-control-lg', {
                 'is-invalid': errors.passwordConfirm
               })}
-              name="password_confirm"
+              name="passwordConfirm"
               onChange={this.handleInputChange}
               value={this.state.passwordConfirm}
             />

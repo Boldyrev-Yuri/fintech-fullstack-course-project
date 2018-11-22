@@ -1,11 +1,40 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-const Home = () => {
-  return (
-    <div>
-      Home Component
-    </div>
-  );
+import TaskForm from './TaskForm';
+// import TaskList from './TaskList';
+
+class Home extends Component {
+  render() {
+    const { isAuthenticated, user } = this.props.auth;
+    const defaultText = (
+      <div>
+        You have to Sign In in order to start using this app
+      </div>
+    );
+    // const userTasks = (
+    //   <div>
+    //     <Route exact path="/add" component={TaskForm} />
+    //     <Route exact path="/" component={TaskList} />
+    //   </div>
+    // );
+
+    return (
+      <div>
+        {/* {isAuthenticated ? userTasks : defaultText} */}
+      </div>
+    );
+  }
+}
+
+Home.propTypes = {
+  auth: PropTypes.object.isRequired
 };
 
-export default Home;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default withRouter(connect(mapStateToProps, {})(Home));

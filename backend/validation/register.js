@@ -12,7 +12,7 @@ const validateRegisterInput = data => {
   if (!Validator.isLength(data.name, { min: 2, max: 30 })) {
     errors.nameLength = 'Длина логина должна быть от 2 до 30 символов';
   }
-  if (Validator.isEmpty(data.nameEmpty)) {
+  if (Validator.isEmpty(data.name)) {
     errors.nameEmpty = 'Введите логин';
   }
   if (!Validator.isEmail(data.email)) {
@@ -27,20 +27,20 @@ const validateRegisterInput = data => {
   if (Validator.isEmpty(data.password)) {
     errors.passwordEmpty = 'Введите пароль';
   }
-  if (!Validator.isLength(data.passwordСonfirm, { min: 6, max: 30 })) {
+  if (!Validator.isLength(data.passwordConfirm, { min: 6, max: 30 })) {
     errors.passwordConfirmLength = 'Длина пароля должна быть от 6 до 30 символов';
   }
-  if (!Validator.equals(data.password, data.passwordСonfirm)) {
+  if (!Validator.equals(data.password, data.passwordConfirm)) {
     errors.passwordConfirmWrong = 'Пароли не совпадают';
   }
-  if (Validator.isEmpty(data.passwordСonfirm)) {
+  if (Validator.isEmpty(data.passwordConfirm)) {
     errors.passwordConfirmEmpty = 'Подтвердите пароль';
   }
 
   return {
     errors,
     isValid: isEmpty(errors)
-  }
+  };
 };
 
 export default validateRegisterInput;
