@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route, withRouter, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import TaskForm from './TaskForm';
-// import TaskList from './TaskList';
+import TaskList from './TaskList';
 
 class Home extends Component {
   render() {
@@ -14,20 +14,23 @@ class Home extends Component {
         You have to Sign In in order to start using this app
       </div>
     );
-    // const userTasks = (
-    //   <div>
-    //     <Route exact path="/add" component={TaskForm} />
-    //     <Route exact path="/" component={TaskList} />
-    //   </div>
-    // );
+    const userTasks = (
+      <div>
+        <TaskForm />
+        <TaskList />
+        {/* <Route exact path="/add" component={TaskForm} /> */}
+        {/* <Route exact path="/" component={TaskList} /> */}
+      </div>
+    );
 
+    console.log(user);
     return (
       <div>
-        {/* {isAuthenticated ? userTasks : defaultText} */}
+        {isAuthenticated ? userTasks : defaultText}
       </div>
     );
   }
-}
+};
 
 Home.propTypes = {
   auth: PropTypes.object.isRequired

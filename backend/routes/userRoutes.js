@@ -16,8 +16,8 @@ router.post('/register', (req, res) => {
   }
   User.findOne({
     email: req.body.email
-  }).then(user => {
-    if (user) {
+  }).then(foundUser => {
+    if (foundUser) {
       return res.status(400).json({
         email: 'Email уже зарегистрирован'
       });
@@ -88,6 +88,7 @@ router.post('/login', (req, res) => {
   });
 });
 
+// Для будущего профиля
 router.get('/me', passport.authenticate('jwt', { session: false }), (req, res) => {
   return res.json({
     id: req.user.id,

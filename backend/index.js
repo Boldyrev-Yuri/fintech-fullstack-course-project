@@ -7,7 +7,7 @@ import passport from 'passport';
 import SourceMapSupport from 'source-map-support';
 // импортируем пути
 import connectString from './mongodbConnect';
-// import taskRoutes from './routes/taskRoutes';
+import taskRoutes from './routes/taskRoutes';
 import userRoutes from './routes/userRoutes';
 import passportUser from './passportUser';
 
@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
   res.end('Сервер работает');
 });
 app.use('/api/users', userRoutes);
-// app.use('/api/tasks', taskRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // app.use('/tasks', taskRoutes);
 // app.use('/account', userRoutes);

@@ -21,6 +21,7 @@
     "express-busboy": "^7.0.0",
     "gravatar": "^1.6.0",
     "jsonwebtoken": "^8.4.0",
+    "moment": "^2.22.2",
     "mongoose": "^5.3.12",
     "morgan": "^1.9.1",
     "nodemon": "^1.18.6",

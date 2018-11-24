@@ -1,6 +1,11 @@
 export const GET_ERRORS = 'GET_ERRORS';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 export const ADD_TASK = 'ADD_TASK';
+export const GET_TASKS_SUCCESS = 'GET_TASKS_SUCCESS';
+export const GET_TASKS = 'GET_TASKS';
+export const EDIT_TASK_SUCCESS = 'EDIT_TASK_SUCCESS';
 export const EDIT_TASK = 'EDIT_TASK';
+export const DELETE_TASK_SUCCESS = 'DELETE_TASK_SUCCESS';
 export const DELETE_TASK = 'DELETE_TASK';
+export const DELETE_TASK_DENIED = ' DELETE_TASK_DENIED';
 export const TOGGLE_TASK = 'TOGGLE_TASK';

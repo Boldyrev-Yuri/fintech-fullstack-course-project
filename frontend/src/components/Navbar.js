@@ -1,10 +1,26 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import {
+  Navbar,
+  NavItem,
+  Nav,
+  NavDropdown,
+  MenuItem,
+  Button,
+  NavbarBrand,
+  NavLink,
+  NavbarToggler,
+  Collapse,
+  FormInline,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logoutUser } from '../actions/authentication';
 
-class Navbar extends Component {
+class MyNavbar extends Component {
   onLogout(e) {
     e.preventDefault();
     this.props.logoutUser(this.props.history);
@@ -14,11 +30,19 @@ class Navbar extends Component {
     const { isAuthenticated, user } = this.props.auth;
     const authLinks = (
       <ul className="navbar-nav ml-auto">
-        <span> {user.name} </span>
-        <button type="button" className="nav-link" onClick={this.onLogout.bind(this)}>
-          (Logout)
-        </button>
+        <span> Hello, {user.name}! </span>
+        {/* <button type="button" className="nav-link" onClick={this.onLogout.bind(this)}> */}
+        <Button className="nav-link" onClick={this.onLogout.bind(this)}>Log Out</Button>
       </ul>
+
+      // <Nav right>
+      //   <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
+      //     <MenuItem>
+      //       <Button className="nav-link" onClick={this.onLogout.bind(this)}>Log Out</Button>
+      //     </MenuItem>
+      //   </NavDropdown>
+      // </Nav>
+
     );
     const guestLinks = (
       <ul className="navbar-nav ml-auto">
@@ -29,6 +53,15 @@ class Navbar extends Component {
           <Link className="nav-link" to="/login">Sign In</Link>
         </li>
       </ul>
+
+      // <Nav right>
+      //   <NavItem>
+      //     <Link className="nav-link" to="/register">Sign Up</Link>
+      //   </NavItem>
+      //   <NavItem>
+      //     <Link className="nav-link" to="/login">Sign In</Link>
+      //   </NavItem>
+      // </Nav>
     );
 
     return (
@@ -38,6 +71,15 @@ class Navbar extends Component {
           {isAuthenticated ? authLinks : guestLinks}
         </div>
       </nav>
+
+      // <Navbar inverse collapseOnSelect>
+      //   <NavbarBrand>
+      //     Fullstack-Fintech
+      //   </NavbarBrand>
+      //   <Collapse>
+      //     {isAuthenticated ? authLinks : guestLinks}
+      //   </Collapse>
+      // </Navbar>
     );
   }
 }
@@ -52,4 +94,4 @@ const mapStateToProps = state => ({
 });
 
 // export default connect(mapStateToProps, { logoutUser })(withRouter(Navbar));
-export default withRouter(connect(mapStateToProps, { logoutUser })(Navbar));
+export default withRouter(connect(mapStateToProps, { logoutUser })(MyNavbar));
