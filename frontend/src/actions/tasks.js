@@ -8,7 +8,12 @@ import {
   EDIT_TASK_SUCCESS,
   DELETE_TASK,
   DELETE_TASK_SUCCESS,
-  DELETE_TASK_DENIED
+  DELETE_TASK_DENIED,
+  EDIT_TASK_DENIED,
+  TOGGLE_FILTER,
+  TOGGLE_TASK,
+  TOGGLE_TASK_DENIED,
+  TOGGLE_TASK_SUCCESS
 } from './types';
 
 export const addTask = task => dispatch => {
@@ -37,7 +42,6 @@ export const getTasks = userId => dispatch => {
   dispatch(fetchTasks());
   axios.post('/api/tasks/get', userId)
     .then(res => {
-      console.log('res', res.data);
       dispatch({
         type: GET_TASKS_SUCCESS,
         payload: res.data
@@ -65,15 +69,12 @@ export const deleteTaskDenied = task => {
 };
 
 export const deleteTaskConfirmed = task => dispatch => {
-  console.log('action', task);
   axios.post('/api/tasks/delete', task)
     .then(res => {
-      console.log('delete res', res);
       dispatch({
         type: DELETE_TASK_SUCCESS,
         payload: res.data
       });
-      // dispatch(deleteTaskDenied);
     })
     .catch(err => {
       dispatch({
@@ -84,7 +85,6 @@ export const deleteTaskConfirmed = task => dispatch => {
 };
 
 export const editTask = task => {
-  console.log('task = ', task);
   return {
     type: EDIT_TASK,
     payload: task
@@ -93,15 +93,51 @@ export const editTask = task => {
 
 export const editTaskDenied = task => {
   return {
-    type: EDIT_TASK
+    type: EDIT_TASK_DENIED
   };
 };
 
-export const editTaskConfirmed = (user, task) => dispatch => {
-  axios.post('/api/tasks/edit', user, task)
+export const editTaskConfirmed = task => dispatch => {
+  axios.post('/api/tasks/edit', task)
     .then(res => {
       dispatch({
         type: EDIT_TASK_SUCCESS,
+        payload: res.data
+      });
+    })
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+    });
+};
+
+export const toggleFilter = filter => dispatch => {
+  dispatch({
+    type: TOGGLE_FILTER,
+    payload: filter
+  });
+};
+
+export const toggleTask = task => dispatch => {
+  dispatch({
+    type: TOGGLE_TASK,
+    payload: task
+  });
+};
+
+export const toggleTaskDenied = task => dispatch => {
+  dispatch({
+    type: TOGGLE_TASK_DENIED
+  });
+};
+
+export const toggleTaskConfirmed = task => dispatch => {
+  axios.post('/api/tasks/toggle', task)
+    .then(res => {
+      dispatch({
+        type: TOGGLE_TASK_SUCCESS,
         payload: res.data
       });
     })

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -18,12 +18,8 @@ class Home extends Component {
       <div>
         <TaskForm />
         <TaskList />
-        {/* <Route exact path="/add" component={TaskForm} /> */}
-        {/* <Route exact path="/" component={TaskList} /> */}
       </div>
     );
-
-    console.log(user);
     return (
       <div>
         {isAuthenticated ? userTasks : defaultText}

@@ -6,9 +6,13 @@ import {
   DELETE_TASK_SUCCESS,
   EDIT_TASK,
   EDIT_TASK_SUCCESS,
-  DELETE_TASK_DENIED
+  DELETE_TASK_DENIED,
+  EDIT_TASK_DENIED,
+  TOGGLE_FILTER,
+  TOGGLE_TASK,
+  TOGGLE_TASK_DENIED,
+  TOGGLE_TASK_SUCCESS
 } from '../actions/types';
-// import isEmpty from '../validation/isEmpty';
 
 const initialState = {
   tasks: [],
@@ -16,7 +20,10 @@ const initialState = {
   showDeleteModal: false,
   taskToDelete: null,
   showEditModal: false,
-  taskToEdit: null
+  taskToEdit: null,
+  showToggleModal: false,
+  taskToToogle: null,
+  visibilityFilter: 'SHOW_ACTIVE'
 };
 
 export default (state = initialState, action) => {
@@ -29,7 +36,10 @@ export default (state = initialState, action) => {
         showDeleteModal: false,
         taskToDelete: null,
         showEditModal: false,
-        taskToEdit: null
+        taskToEdit: null,
+        showToggleModal: false,
+        taskToToogle: null,
+        visibilityFilter: state.visibilityFilter
       };
     case GET_TASKS:
       return {
@@ -39,7 +49,10 @@ export default (state = initialState, action) => {
         showDeleteModal: false,
         taskToDelete: null,
         showEditModal: false,
-        taskToEdit: null
+        taskToEdit: null,
+        showToggleModal: false,
+        taskToToogle: null,
+        visibilityFilter: state.visibilityFilter
       };
     case GET_TASKS_SUCCESS:
       return {
@@ -49,10 +62,12 @@ export default (state = initialState, action) => {
         showDeleteModal: false,
         taskToDelete: null,
         showEditModal: false,
-        taskToEdit: null
+        taskToEdit: null,
+        showToggleModal: false,
+        taskToToogle: null,
+        visibilityFilter: state.visibilityFilter
       };
     case DELETE_TASK:
-      console.log('del task', state.showDeleteModal, state.taskToDelete, action.payload);
       return {
         ...state,
         tasks: state.tasks,
@@ -60,10 +75,12 @@ export default (state = initialState, action) => {
         showDeleteModal: true,
         taskToDelete: action.payload,
         showEditModal: false,
-        taskToEdit: null
+        taskToEdit: null,
+        showToggleModal: false,
+        taskToToogle: null,
+        visibilityFilter: state.visibilityFilter
       };
     case DELETE_TASK_DENIED:
-      console.log('deny task', state.showDeleteModal, state.taskToDelete, action.payload);
       return {
         ...state,
         tasks: state.tasks,
@@ -71,10 +88,12 @@ export default (state = initialState, action) => {
         showDeleteModal: false,
         taskToDelete: null,
         showEditModal: false,
-        taskToEdit: null
+        taskToEdit: null,
+        showToggleModal: false,
+        taskToToogle: null,
+        visibilityFilter: state.visibilityFilter
       };
     case DELETE_TASK_SUCCESS:
-      console.log('reducer', state);
       const filteredTasks = state.tasks.filter(task => task._id !== state.taskToDelete._id);
 
       return {
@@ -84,7 +103,10 @@ export default (state = initialState, action) => {
         showDeleteModal: false,
         taskToDelete: null,
         showEditModal: false,
-        taskToEdit: null
+        taskToEdit: null,
+        showToggleModal: false,
+        taskToToogle: null,
+        visibilityFilter: state.visibilityFilter
       };
     case EDIT_TASK:
       return {
@@ -94,14 +116,30 @@ export default (state = initialState, action) => {
         showDeleteModal: false,
         taskToDelete: null,
         showEditModal: true,
-        taskToEdit: action.payload
+        showToggleModal: false,
+        taskToToogle: null,
+        taskToEdit: action.payload,
+        visibilityFilter: state.visibilityFilter
+      };
+    case EDIT_TASK_DENIED:
+      return {
+        ...state,
+        tasks: state.tasks,
+        isFetching: false,
+        showDeleteModal: false,
+        taskToDelete: null,
+        showEditModal: false,
+        taskToEdit: null,
+        showToggleModal: false,
+        taskToToogle: null,
+        visibilityFilter: state.visibilityFilter
       };
     case EDIT_TASK_SUCCESS:
       const updatedTasks = state.tasks.map(task => {
         if (task._id !== action.payload._id) {
           return task;
         }
-        return { ...task, ...action.payload }
+        return action.payload;
       });
 
       return {
@@ -111,7 +149,69 @@ export default (state = initialState, action) => {
         showDeleteModal: false,
         taskToDelete: null,
         showEditModal: false,
-        taskToEdit: null
+        taskToEdit: null,
+        showToggleModal: false,
+        taskToToogle: null,
+        visibilityFilter: state.visibilityFilter
+      };
+    case TOGGLE_FILTER:
+      return {
+        ...state,
+        tasks: state.tasks,
+        isFetching: false,
+        showDeleteModal: false,
+        taskToDelete: null,
+        showEditModal: false,
+        taskToEdit: null,
+        showToggleModal: false,
+        taskToToogle: null,
+        visibilityFilter: action.payload
+      };
+    case TOGGLE_TASK:
+      return {
+        ...state,
+        tasks: state.tasks,
+        isFetching: false,
+        showDeleteModal: false,
+        taskToDelete: null,
+        showEditModal: false,
+        taskToEdit: null,
+        showToggleModal: true,
+        taskToToggle: action.payload,
+        visibilityFilter: state.visibilityFilter
+      };
+    case TOGGLE_TASK_DENIED:
+      return {
+        ...state,
+        tasks: state.tasks,
+        isFetching: false,
+        showDeleteModal: false,
+        taskToDelete: null,
+        showEditModal: false,
+        taskToEdit: null,
+        showToggleModal: false,
+        taskToToogle: null,
+        visibilityFilter: action.payload
+      };
+    case TOGGLE_TASK_SUCCESS:
+      const toggledTasks = state.tasks.map(task => {
+        if (task._id !== action.payload._id) {
+          return task;
+        }
+        return action.payload;
+      });
+
+      return {
+        ...state,
+        tasks: toggledTasks,
+        isFetching: false,
+        showDeleteModal: false,
+        taskToDelete: null,
+        showEditModal: false,
+        taskToEdit: null,
+        showToggleModal: false,
+        taskToToogle: null,
+        visibilityFilter: state.visibilityFilter
       };
     default:
       return state;

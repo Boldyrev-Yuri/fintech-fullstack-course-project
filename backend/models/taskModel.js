@@ -18,6 +18,14 @@ const TaskSchema = new Schema({
   userId: {
     type: String,
     required: true
+  },
+  status: {
+    type: Boolean,
+    required: true
+  },
+  notify: {
+    type: Boolean,
+    required: true
   }
 }, { timestamps: true });
 

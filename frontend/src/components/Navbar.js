@@ -31,7 +31,6 @@ class MyNavbar extends Component {
     const authLinks = (
       <ul className="navbar-nav ml-auto">
         <span> Hello, {user.name}! </span>
-        {/* <button type="button" className="nav-link" onClick={this.onLogout.bind(this)}> */}
         <Button className="nav-link" onClick={this.onLogout.bind(this)}>Log Out</Button>
       </ul>
 
@@ -93,5 +92,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-// export default connect(mapStateToProps, { logoutUser })(withRouter(Navbar));
 export default withRouter(connect(mapStateToProps, { logoutUser })(MyNavbar));

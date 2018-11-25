@@ -1,19 +1,9 @@
 import React, { Component } from 'react';
 import { Button, Alert } from 'react-bootstrap';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import Modal from 'react-modal';
-// import {
-//   Modal,
-//   ModalHeader,
-//   ModalTitle,
-//   ModalClose,
-//   ModalBody,
-//   ModalFooter
-// } from 'react-modal-bootstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
-import * as jquery from 'jquery';
 import * as moment from 'moment';
 import {
   getTasks,
@@ -21,10 +11,24 @@ import {
   deleteTaskConfirmed,
   deleteTaskDenied,
   editTask,
-  editTaskConfirmed,
-  editTaskDenied
+  editTaskDenied,
+  toggleFilter,
+  toggleTask,
+  toggleTaskConfirmed,
+  toggleTaskDenied
 } from '../actions/tasks';
 import TaskEditForm from './TaskEditForm';
+
+const getVisibleTasks = (tasks, filter) => {
+  switch (filter) {
+    case 'SHOW_COMPLETED':
+      return tasks.filter(t => t.status);
+    case 'SHOW_ACTIVE':
+      return tasks.filter(t => !t.status);
+    default:
+      throw new Error(`Unknown filter: ${filter}.`);
+  }
+};
 
 class TaskList extends Component {
   constructor() {
@@ -33,8 +37,10 @@ class TaskList extends Component {
     this.hideEditModal = this.hideEditModal.bind(this);
     this.hideDeleteModal = this.hideDeleteModal.bind(this);
     this.showDeleteModal = this.showDeleteModal.bind(this);
-    this.cofirmDeleteTask = this.cofirmDeleteTask.bind(this);
-    // this.submitEditTask = this.submitEditTask.bind(this);
+    this.showToggleModal = this.showToggleModal.bind(this);
+    this.hideToggleModal = this.hideToggleModal.bind(this);
+    this.confirmDeleteTask = this.confirmDeleteTask.bind(this);
+    this.confirmToggleTask = this.confirmToggleTask.bind(this);
   }
 
   componentWillMount() {
@@ -44,44 +50,35 @@ class TaskList extends Component {
   }
 
   showEditModal(taskToEdit) {
-    console.log('show modal', taskToEdit);
     this.props.editTask(taskToEdit);
+  }
+
+  showToggleModal(taskToToggle) {
+    this.props.toggleTask(taskToToggle);
+  }
+
+  showDeleteModal(taskToDelete) {
+    this.props.deleteTask(taskToDelete);
   }
 
   hideEditModal() {
     this.props.editTaskDenied();
   }
 
-  // submitEditTask(e) {
-  //   e.preventDefault();
-  //   const editForm = document.getElementById('EditTodoForm');
-  //   if(editForm.todoText.value !== ""){
-  //     const data = new FormData();
-  //     data.append('id', editForm.id.value);
-  //     data.append('todoText', editForm.todoText.value);
-  //     data.append('todoDesc', editForm.todoDesc.value);
-  //     this.props.EditTaskConfirmed(data);
-  //   } else {
-  //     return;
-  //   }
-  //   this.hideEditModal()
-  // }
+  hideToggleModal() {
+    this.props.toggleTaskDenied();
+  }
 
   hideDeleteModal() {
     this.props.deleteTaskDenied();
   }
 
-  showDeleteModal(taskToDelete) {
-    console.log('show', taskToDelete);
-    this.props.deleteTask(taskToDelete);
+  confirmDeleteTask() {
+    this.props.deleteTaskConfirmed({ id: this.props.tasks.taskToDelete._id });
   }
 
-  cofirmDeleteTask() {
-    console.log('in component', this.props.tasks.taskToDelete._id);
-    this.props.deleteTaskConfirmed({ id: this.props.tasks.taskToDelete._id });
-    // if (!this.props.tasks.taskToDelete) {
-    //   this.hideDeleteModal();
-    // }
+  confirmToggleTask() {
+    this.props.toggleTaskConfirmed({ id: this.props.tasks.taskToToggle._id });
   }
 
   render() {
@@ -92,21 +89,34 @@ class TaskList extends Component {
       showDeleteModal,
       showEditModal,
       taskToDelete,
-      taskToEdit
+      taskToEdit,
+      visibilityFilter,
+      taskToToggle,
+      showToggleModal
     } = taskState;
-    console.log('render', taskToEdit);
-
-    console.log(tasks);
 
     return (
       <div>
-        <span>Hiiiiii</span>
-
+        <Button
+          onClick={() => this.props.toggleFilter('SHOW_ACTIVE')}
+          disabled={visibilityFilter === 'SHOW_ACTIVE'}
+        >
+          Active
+        </Button>
+        <Button
+          onClick={() => this.props.toggleFilter('SHOW_COMPLETED')}
+          disabled={visibilityFilter === 'SHOW_COMPLETED'}
+        >
+          Completed
+        </Button>
         {!tasks && isFetching &&
           <p>Loading tasks....</p>
         }
-        {tasks.length <= 0 && !isFetching &&
-          <p>No Tasks Available. Add A Task to List here.</p>
+        {tasks.length <= 0 && !isFetching && visibilityFilter === 'SHOW_ACTIVE' &&
+          <p>No active tasks available. Add a task to list here.</p>
+        }
+        {tasks.length <= 0 && !isFetching && visibilityFilter === 'SHOW_COMPLETED' &&
+          <p>You have no completed tasks available. Do some work first, please.</p>
         }
         {tasks && tasks.length > 0 && !isFetching && (
           <div className="container">
@@ -114,45 +124,26 @@ class TaskList extends Component {
               <div key={task.id}>
                 <h4>{task.name}</h4>
                 <p>{task.description}</p>
-                <span>{task.deadline}</span>
-                <Button onClick={() => this.showEditModal(task)}>Edit this task</Button>
-                <Button onClick={() => this.showDeleteModal(task)}>Delete this task</Button>
+                <span>Created: {moment(task.createdAt).format('DD.MM.YYYY HH:mm:ss')}</span><br />
+                <span>Deadline: {moment(task.deadline).format('DD.MM.YYYY HH:mm:ss')}</span><br />
+                {visibilityFilter !== 'SHOW_COMPLETED' && (
+                  <div>
+                    <span>Status: {task.status ? 'Done' : 'In progress'}</span><br />
+                    <span>Notify: {task.notify ? 'Yes' : 'No'}</span><br />
+                    <Button onClick={() => this.showToggleModal(task)}>Mark as completed</Button>
+                    <Button onClick={() => this.showEditModal(task)}>Edit this task</Button>
+                    <Button onClick={() => this.showDeleteModal(task)}>Delete this task</Button>
+                  </div>
+                )}
+                {visibilityFilter === 'SHOW_COMPLETED' && (
+                  <div>
+                    <span>Completed: {moment(task.updatedAt).format('DD.MM.YYYY HH:mm:ss')}</span>
+                  </div>
+                )}
               </div>))
             }
-            {/* {this.getTasks()} */}
-            {/* {tasks} */}
           </div>)
         }
-
-        {/* Modal for editing task */}
-
-        {/* <Modal
-          show={showEditModal}
-          onHide={this.hideEditModal}
-          container={this}
-          aria-labelledby="contained-modal-title"
-        >
-          <ModalHeader closeButton>
-            <ModalClose onClick={this.hideEditModal}/>
-            <ModalTitle id="contained-modal-title">Edit Your Task</ModalTitle>
-          </ModalHeader>
-          <ModalBody>
-            <div className="col-md-12">
-              {taskToEdit &&
-                // <TaskEditForm taskData={taskToEdit} editTodo={this.submitEditTodo} />
-                <span>Hello!</span>
-              }
-              {taskToEdit && isFetching &&
-                <Alert bsStyle="info">
-                  <strong>Updating...... </strong>
-                </Alert>
-              }
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={this.hideEditModal}>Close</Button>
-          </ModalFooter>
-        </Modal> */}
 
         <Modal
           isOpen={showEditModal}
@@ -164,86 +155,40 @@ class TaskList extends Component {
             {taskToEdit &&
               <TaskEditForm taskData={taskToEdit} editTask={this.submitEditTodo} />
             }
-            {taskToEdit && isFetching &&
-              <Alert bsStyle="info">
-                <strong>Updating...... </strong>
-              </Alert>
-            }
           </div>
           <Button onClick={this.hideEditModal}>Close</Button>
         </Modal>
 
-        {/* Modal for deleting task */}
-
-        {/* <Modal
-          show={showDeleteModal}
-          onHide={this.hideDeleteModal}
-          container={this}
-          aria-labelledby="contained-modal-title"
-        >
-          <ModalHeader closeButton>
-            <ModalClose onClick={this.hideDeleteModal}/>
-            <ModalTitle id="contained-modal-title">Delete Your Task</ModalTitle>
-          </ModalHeader>
-          <ModalBody>
-            {taskToDelete && !this.props.error && !isFetching && 
-              <Alert bsStyle="warning">
-                <strong>{taskToDelete.name} </strong><br />
-                Are you sure you want to delete this task?
-              </Alert>
-            }
-            {taskToDelete && this.props.error &&
-              <Alert bsStyle="warning">
-                Failed. <strong>{this.props.error} </strong>
-              </Alert>
-            }
-            {taskToDelete && !this.props.error && isFetching &&
-              <Alert bsStyle="success">
-                <strong>Deleting.... </strong>
-              </Alert>
-            }
-            {!taskToDelete && !this.props.error && !isFetching&&
-              <Alert bsStyle="success">
-                Task deleted
-              </Alert>
-            }
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={this.cofirmDeleteTask}>Yes</Button>
-            <Button onClick={this.hideDeleteModal}>No</Button>
-          </ModalFooter>
-        </Modal> */}
-
         <Modal
           isOpen={showDeleteModal}
-          // onRequestClose={this.hideDeleteModal}
           contentLabel="Delete Your Task"
           className="Modal"
         >
-          {taskToDelete && !this.props.error && !isFetching && 
+          {taskToDelete && !isFetching && 
             <Alert bsStyle="warning">
               <strong>{taskToDelete.name} </strong><br />
               Are you sure you want to delete this task?
             </Alert>
           }
-          {taskToDelete && this.props.error &&
-            <Alert bsStyle="warning">
-              Failed. <strong>{this.props.error} </strong>
-            </Alert>
-          }
-          {taskToDelete && !this.props.error && isFetching &&
-            <Alert bsStyle="success">
-              <strong>Deleting.... </strong>
-            </Alert>
-          }
-          {!taskToDelete && !this.props.error && !isFetching&&
-            <Alert bsStyle="success">
-              Task deleted
-            </Alert>
-          }
-          <Button onClick={this.cofirmDeleteTask}>Yes</Button>
+          <Button onClick={this.confirmDeleteTask}>Yes</Button>
           <Button onClick={this.hideDeleteModal}>No</Button>
         </Modal>
+
+        <Modal
+          isOpen={showToggleModal}
+          contentLabel="Toggle Your Task"
+          className="Modal"
+        >
+          {taskToToggle && !isFetching && 
+            <Alert bsStyle="warning">
+              <strong>{taskToToggle.name} </strong><br />
+              Are you sure you want to mark this task as completed? <strong>This action cannot be udone!</strong>
+            </Alert>
+          }
+          <Button onClick={this.confirmToggleTask}>Yes</Button>
+          <Button onClick={this.hideDeleteModal}>No</Button>
+        </Modal>
+
 
       </div>
     );
@@ -256,26 +201,41 @@ TaskList.propTypes = {
   deleteTaskConfirmed: PropTypes.func.isRequired,
   deleteTaskDenied: PropTypes.func.isRequired,
   editTask: PropTypes.func.isRequired,
-  editTaskConfirmed: PropTypes.func.isRequired,
   editTaskDenied: PropTypes.func.isRequired,
+  toggleFilter: PropTypes.func.isRequired,
+  toggleTask: PropTypes.func.isRequired,
+  toggleTaskConfirmed: PropTypes.func.isRequired,
+  toggleTaskDenied: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   tasks: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  tasks: state.tasks
+  tasks: {
+    tasks: getVisibleTasks(state.tasks.tasks, state.tasks.visibilityFilter),
+    isFetching: state.tasks.isFetching,
+    showDeleteModal: state.tasks.showDeleteModal,
+    showEditModal: state.tasks.showEditModal,
+    taskToDelete: state.tasks.taskToDelete,
+    taskToEdit: state.tasks.taskToEdit,
+    visibilityFilter: state.tasks.visibilityFilter,
+    showToggleModal: state.tasks.showToggleModal,
+    taskToToggle: state.tasks.taskToToggle
+  }
 });
 
-// Modal.setAppElement('#root');
+Modal.setAppElement('#root');
 
-// export default connect(mapStateToProps, { registerUser })(withRouter(Register));
 export default withRouter(connect(mapStateToProps, {
   getTasks,
   deleteTask,
   deleteTaskConfirmed,
   deleteTaskDenied,
   editTask,
-  editTaskConfirmed,
-  editTaskDenied
+  editTaskDenied,
+  toggleFilter,
+  toggleTask,
+  toggleTaskConfirmed,
+  toggleTaskDenied
 })(TaskList));

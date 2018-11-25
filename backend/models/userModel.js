@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-// import bcrypt from 'bcrypt';
 
 const { Schema } = mongoose;
 
@@ -19,14 +18,6 @@ const UserSchema = new Schema({
     required: true
   }
 }, { timestamps: true });
-
-// UserSchema.methods.generateHash = password => {
-//   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-// };
-
-// UserSchema.methods.validPassword = password => {
-//   return bcrypt.compareSync(password, this.password);
-// };
 
 const User = mongoose.model('Users', UserSchema);
 
