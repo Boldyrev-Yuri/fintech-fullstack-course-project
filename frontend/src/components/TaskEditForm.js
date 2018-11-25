@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import {
-  FormGroup,
-  ControlLabel,
-  FormControl,
+  Label,
+  Input,
+  ModalBody,
+  ModalFooter,
   Button,
-  Checkbox
-} from 'react-bootstrap';
+  Form,
+  FormGroup
+} from 'reactstrap';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import * as moment from 'moment';
@@ -15,8 +17,8 @@ import { editTaskConfirmed } from '../actions/tasks';
 import 'react-datetime/css/react-datetime.css';
 
 class TaskEditForm extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       taskName: '',
       taskDescription: '',
@@ -69,64 +71,64 @@ class TaskEditForm extends Component {
     const { taskData } = this.props;
 
     return (
-      <form className="form form-horizontal" id="EditTodoForm" onSubmit={e => this.handleSubmit(e)}>
-        <div className="row">
-          <div className="col-md-12">
-            <FormGroup>
-              <label htmlFor="taskDeadline">Deadline:</label>
-              <Datetime
-                id="taskDeadline"
-                name="taskDeadline"
-                value={moment(this.state.taskDeadline).format('DD.MM.YYYY HH:mm:ss')}
-                dateFormat="DD.MM.YYYY"
-                timeFormat="HH:mm:ss"
-                viewMode="days"
-                onChange={date => this.handleDateChange(date)}
-                isValidDate={this.isValid}
-                closeOnSelect
-              />
-            </FormGroup>
-          </div>
-          <div className="col-md-12">
-            <FormGroup>
-              <ControlLabel>Task: </ControlLabel>
-              <input type="hidden" value={taskData._id} name="id"/>
-              <FormControl
-                type="text"
-                placeholder="Enter task"
-                name="taskName"
-                defaultValue={this.state.taskName}
-                onChange={e => this.handleInputChange(e)}
-              />
-            </FormGroup>
-          </div>
-          <div className="col-md-12">
-            <FormGroup>
-              <ControlLabel>Description: </ControlLabel>
-              <FormControl
-                componentClass="textarea"
-                placeholder="Enter description"
-                name="taskDescription"
-                value={this.state.taskDescription}
-                onChange={e => this.handleInputChange(e)}
-              />
-            </FormGroup>
-          </div>
-          <div className="col-md-12">
-            <FormGroup>
-              <ControlLabel>Notify: </ControlLabel>
-              <Checkbox
-                name="taskNotify"
-                checked={this.state.taskNotify}
-                onChange={e => this.handleInputChange(e)}
-              />
-            </FormGroup>
-          </div>
-        </div>
-        <FormGroup>
-          <Button type="submit" bsStyle="success" bsSize="large" block>Submit</Button>
-        </FormGroup>
-      </form>
+      <Form
+        className="form form-horizontal"
+        onSubmit={e => this.handleSubmit(e)}
+      >
+        <ModalBody>
+          <FormGroup>
+            <Label for="taskDeadline">Deadline:</Label>
+            <Datetime
+              id="taskDeadline"
+              name="taskDeadline"
+              value={moment(this.state.taskDeadline).format('DD.MM.YYYY HH:mm:ss')}
+              dateFormat="DD.MM.YYYY"
+              timeFormat="HH:mm:ss"
+              viewMode="days"
+              onChange={date => this.handleDateChange(date)}
+              isValidDate={this.isValid}
+              closeOnSelect
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="taskName">Task: </Label>
+            <Input type="hidden" value={taskData._id} name="id"/>
+            <Input
+              type="text"
+              placeholder="Enter task"
+              id="taskName"
+              name="taskName"
+              value={this.state.taskName}
+              onChange={e => this.handleInputChange(e)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="taskDescription">Description: </Label>
+            <Input
+              type="textarea"
+              placeholder="Enter description"
+              name="taskDescription"
+              id="taskDescription"
+              value={this.state.taskDescription}
+              onChange={e => this.handleInputChange(e)}
+            />
+          </FormGroup>
+          <FormGroup style={{ marginLeft: '20px' }}>
+            <Input
+              type="checkbox"
+              name="taskNotify"
+              id="taskNotify"
+              checked={this.state.taskNotify}
+              onChange={e => this.handleInputChange(e)}
+            />
+            <Label for="taskNotify">Notify prior to 30 minutes</Label>
+          </FormGroup>
+        </ModalBody>
+        <ModalFooter>
+          <Button type="submit" color="success">Submit</Button>
+          <Button color="danger" onClick={this.hideEditModal}>Close</Button>
+        </ModalFooter>
+      </Form>
     );
   }
 }
@@ -137,6 +139,7 @@ const mapStateToProps = state => ({
 
 TaskEditForm.propTypes = {
   taskData: PropTypes.object.isRequired,
+  hideEditModal: PropTypes.func.isRequired,
   editTaskConfirmed: PropTypes.func.isRequired
 };
 

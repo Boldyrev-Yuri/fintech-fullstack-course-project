@@ -1,10 +1,22 @@
 import React, { Component } from 'react';
-import { Button, Alert } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
-import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Card,
+  Alert,
+  Button,
+  ButtonGroup,
+  CardTitle,
+  CardText,
+  CardHeader,
+  CardBody
+} from 'reactstrap';
 import {
   getTasks,
   deleteTask,
@@ -96,19 +108,23 @@ class TaskList extends Component {
     } = taskState;
 
     return (
-      <div>
-        <Button
-          onClick={() => this.props.toggleFilter('SHOW_ACTIVE')}
-          disabled={visibilityFilter === 'SHOW_ACTIVE'}
-        >
-          Active
-        </Button>
-        <Button
-          onClick={() => this.props.toggleFilter('SHOW_COMPLETED')}
-          disabled={visibilityFilter === 'SHOW_COMPLETED'}
-        >
-          Completed
-        </Button>
+      <div className="text-center">
+        <ButtonGroup>
+          <Button
+            color="info"
+            onClick={() => this.props.toggleFilter('SHOW_ACTIVE')}
+            disabled={visibilityFilter === 'SHOW_ACTIVE'}
+          >
+            Active
+          </Button>
+          <Button
+            color="info"
+            onClick={() => this.props.toggleFilter('SHOW_COMPLETED')}
+            disabled={visibilityFilter === 'SHOW_COMPLETED'}
+          >
+            Completed
+          </Button>
+        </ButtonGroup>
         {!tasks && isFetching &&
           <p>Loading tasks....</p>
         }
@@ -121,25 +137,56 @@ class TaskList extends Component {
         {tasks && tasks.length > 0 && !isFetching && (
           <div className="container">
             {tasks.map((task, i) => (
-              <div key={task.id}>
-                <h4>{task.name}</h4>
-                <p>{task.description}</p>
-                <span>Created: {moment(task.createdAt).format('DD.MM.YYYY HH:mm:ss')}</span><br />
-                <span>Deadline: {moment(task.deadline).format('DD.MM.YYYY HH:mm:ss')}</span><br />
-                {visibilityFilter !== 'SHOW_COMPLETED' && (
-                  <div>
-                    <span>Status: {task.status ? 'Done' : 'In progress'}</span><br />
-                    <span>Notify: {task.notify ? 'Yes' : 'No'}</span><br />
-                    <Button onClick={() => this.showToggleModal(task)}>Mark as completed</Button>
-                    <Button onClick={() => this.showEditModal(task)}>Edit this task</Button>
-                    <Button onClick={() => this.showDeleteModal(task)}>Delete this task</Button>
-                  </div>
-                )}
-                {visibilityFilter === 'SHOW_COMPLETED' && (
-                  <div>
-                    <span>Completed: {moment(task.updatedAt).format('DD.MM.YYYY HH:mm:ss')}</span>
-                  </div>
-                )}
+              <div
+                key={task.id}
+                className="container"
+                style={{ marginTop: '15px', marginBottom: '5px', maxWidth: '700px' }}
+              >
+                <Card outline color="primary">
+                  <CardHeader tag="h4">{task.name}</CardHeader>
+                  <CardBody>
+                    <CardTitle>{task.description}</CardTitle>
+                    <CardText>
+                      <span>Created: {moment(task.createdAt).format('DD.MM.YYYY HH:mm:ss')}</span><br />
+                      <span>Deadline: {moment(task.deadline).format('DD.MM.YYYY HH:mm:ss')}</span><br />
+                      {visibilityFilter !== 'SHOW_COMPLETED' && (
+                        <React.Fragment>
+                          <span>Status: {task.status ? 'Done' : 'In progress'}</span><br />
+                          <span>Notify: {task.notify ? 'Yes' : 'No'}</span><br />
+                          <Button
+                            color="success"
+                            onClick={() => this.showToggleModal(task)}
+                          >
+                            Complete
+                          </Button>
+                          <Button
+                            color="warning"
+                            onClick={() => this.showEditModal(task)}
+                          >
+                            Change
+                          </Button>
+                          <Button
+                            color="danger"
+                            onClick={() => this.showDeleteModal(task)}
+                          >
+                            Delete
+                          </Button>
+                        </React.Fragment>
+                      )}
+                      {visibilityFilter === 'SHOW_COMPLETED' && (
+                        <React.Fragment>
+                          <span>Completed: {moment(task.updatedAt).format('DD.MM.YYYY HH:mm:ss')}</span><br />
+                          <Button
+                            color="danger"
+                            onClick={() => this.showDeleteModal(task)}
+                          >
+                            Delete
+                          </Button>
+                        </React.Fragment>
+                      )}
+                    </CardText>
+                  </CardBody>
+                </Card>
               </div>))
             }
           </div>)
@@ -147,49 +194,52 @@ class TaskList extends Component {
 
         <Modal
           isOpen={showEditModal}
-          // onRequestClose={this.hideEditModal}
-          contentLabel="Edit Your Task"
           className="Modal"
         >
-          <div className="col-md-12">
-            {taskToEdit &&
-              <TaskEditForm taskData={taskToEdit} editTask={this.submitEditTodo} />
-            }
-          </div>
-          <Button onClick={this.hideEditModal}>Close</Button>
+          <ModalHeader>Change Task</ModalHeader>
+          {taskToEdit &&
+            <TaskEditForm taskData={taskToEdit} editTask={this.submitEditTodo} hideEditModal={this.hideEditModal}/>
+          }
         </Modal>
 
         <Modal
           isOpen={showDeleteModal}
-          contentLabel="Delete Your Task"
           className="Modal"
         >
-          {taskToDelete && !isFetching && 
-            <Alert bsStyle="warning">
-              <strong>{taskToDelete.name} </strong><br />
-              Are you sure you want to delete this task?
-            </Alert>
-          }
-          <Button onClick={this.confirmDeleteTask}>Yes</Button>
-          <Button onClick={this.hideDeleteModal}>No</Button>
+          <ModalHeader>Delete Task</ModalHeader>
+          <ModalBody>
+            {taskToDelete && !isFetching && (
+              <Alert color="warning">
+                <strong>{taskToDelete.name}</strong><br />
+                Are you sure you want to delete this task?
+              </Alert>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={this.confirmDeleteTask}>Yes</Button>
+            <Button onClick={this.hideDeleteModal}>No</Button>
+          </ModalFooter>
         </Modal>
 
         <Modal
           isOpen={showToggleModal}
-          contentLabel="Toggle Your Task"
           className="Modal"
         >
-          {taskToToggle && !isFetching && 
-            <Alert bsStyle="warning">
-              <strong>{taskToToggle.name} </strong><br />
-              Are you sure you want to mark this task as completed? <strong>This action cannot be udone!</strong>
-            </Alert>
-          }
-          <Button onClick={this.confirmToggleTask}>Yes</Button>
-          <Button onClick={this.hideDeleteModal}>No</Button>
+          <ModalHeader>Complete Task</ModalHeader>
+          <ModalBody>
+            {taskToToggle && !isFetching && (
+              <Alert color="warning">
+                <strong>{taskToToggle.name} </strong><br />
+                Are you sure you want to mark this task as completed? <br />
+                <span>This action cannot be undone!</span>
+              </Alert>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={this.confirmToggleTask}>Yes</Button>
+            <Button onClick={this.hideDeleteModal}>No</Button>
+          </ModalFooter>
         </Modal>
-
-
       </div>
     );
   }
@@ -225,7 +275,7 @@ const mapStateToProps = state => ({
   }
 });
 
-Modal.setAppElement('#root');
+// Modal.setAppElement('#root');
 
 export default withRouter(connect(mapStateToProps, {
   getTasks,

@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -80,7 +80,7 @@ table {
 
   /* width:500px; */
   /* background-color: #F5F5F5; */
-}
+/* } */
 
 /* .Modal {
   text-align: center;
@@ -101,7 +101,7 @@ table {
   text-align: left;
   vertical-align: middle;
 } */
-
+/* 
 .Overlay {
   position: fixed;
   top: 0;
@@ -129,4 +129,12 @@ fieldset{
 
 .closebtn{
   float:right;
+} */
+
+.btn-group .btn {
+  margin: 10px 0px 0px 0px;
+}
+
+.btn {
+  margin: 5px 5px -5px 5px;
 }

@@ -6,7 +6,7 @@ import store from './store';
 import setAuthToken from './setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authentication';
 
-import Navbar from './components/Navbar';
+import MyNavbar from './components/Navbar';
 import Register from './components/Register';
 import Login from './components/Login';
 import Home from './components/Home';
@@ -33,7 +33,7 @@ const App = () => {
     <Provider store={store}>
       <Router>
         <div>
-          <Navbar />
+          <MyNavbar />
           <Route exact path="/" component={Home} />
           <div className="container">
             <Route exact path="/register" component={Register} />

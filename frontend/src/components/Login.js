@@ -3,6 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
+import {
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input
+} from 'reactstrap';
 import { loginUser } from '../actions/authentication';
 
 class Login extends Component {
@@ -54,41 +61,41 @@ class Login extends Component {
     const { errors } = this.state;
 
     return (
-      <div className="container" style={{ marginTop: '50px', width: '700px'}}>
-        <h2 style={{ marginBottom: '40px' }}>Login</h2>
-        <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <input
+      <div className="container" style={{ marginTop: '40px', maxWidth: '500px' }}>
+        <Form onSubmit={this.handleSubmit}>
+          <h2 style={{ marginBottom: '20px' }}>Login</h2>
+          <FormGroup>
+            <Label for="email">Email</Label>
+            <Input
               type="email"
+              name="email"
+              id="email"
               placeholder="Email"
+              onChange={this.handleInputChange}
+              value={this.state.email}
               className={classnames('form-control form-control-lg', {
                 'is-invalid': errors.email
               })}
-              name="email"
-              onChange={this.handleInputChange}
-              value={this.state.email}
             />
             {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
-          </div>
-          <div className="form-group">
-            <input
+          </FormGroup>
+          <FormGroup>
+            <Label for="password">Password</Label>
+            <Input
               type="password"
+              name="password"
+              id="password"
               placeholder="Password"
+              onChange={this.handleInputChange}
+              value={this.state.password}
               className={classnames('form-control form-control-lg', {
                 'is-invalid': errors.password
               })}
-              name="password"
-              onChange={this.handleInputChange}
-              value={this.state.password}
             />
             {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
-          </div>
-          <div className="form-group">
-            <button type="submit" className="btn btn-primary">
-              Login User
-            </button>
-          </div>
-        </form>
+          </FormGroup>
+          <Button color="primary">Submit</Button>
+        </Form>
       </div>
     );
   }
