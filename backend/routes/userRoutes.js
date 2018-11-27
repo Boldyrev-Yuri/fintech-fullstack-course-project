@@ -32,9 +32,9 @@ router.post('/register', (req, res) => {
       if (err) {
         console.error('Возникла ошибка', err);
       } else {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
+        bcrypt.hash(newUser.password, salt, (errHash, hash) => {
           if (err) {
-            console.error('Возникла ошибка', err);
+            console.error('Возникла ошибка', errHash);
           } else {
             newUser.password = hash;
             newUser.save().then(user => {
@@ -54,7 +54,6 @@ router.post('/login', (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  console.log(errors, isValid, email, password);
 
   User.findOne({ email }).then(user => {
     if (!user) {

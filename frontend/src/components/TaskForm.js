@@ -95,18 +95,18 @@ class TaskForm extends Component {
           color="secondary"
           onClick={this.openModal}
         >
-          Add new task
+          Создать задачу
         </Button>
 
         <Modal
           isOpen={this.state.modalIsOpen}
           className="Modal"
         >
-          <ModalHeader>Add Task</ModalHeader>
+          <ModalHeader>Новая задача</ModalHeader>
           <ModalBody>
             <Form onSubmit={this.handleSubmit}>
               <FormGroup>
-                <Label for="taskDeadline">Deadline:</Label>
+                <Label for="taskDeadline">Дедлайн:</Label>
                 <Datetime
                   id="taskDeadline"
                   name="taskDeadline"
@@ -121,9 +121,10 @@ class TaskForm extends Component {
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="taskName">Task name:</Label>
+                <Label for="taskName">Название:</Label>
                 <Input
                   type="text"
+                  placeholder="Введите название задачи"
                   id="taskName"
                   name="taskName"
                   value={this.state.taskName}
@@ -132,9 +133,10 @@ class TaskForm extends Component {
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="taskDescription">Task description:</Label>
+                <Label for="taskDescription">Описание:</Label>
                 <Input
                   type="textarea"
+                  placeholder="Введите описание задачи"
                   id="taskDescription"
                   name="taskDescription"
                   value={this.state.taskDescription}
@@ -151,7 +153,7 @@ class TaskForm extends Component {
                   onChange={e => this.handleInputChange(e)}
                   required
                 />
-                <Label for="taskNotify">Notify prior to 30 minutes</Label>
+                <Label for="taskNotify">Уведомить за 30 минут до окончания</Label>
               </FormGroup>
             </Form>
           </ModalBody>
@@ -160,13 +162,13 @@ class TaskForm extends Component {
               color="success"
               onClick={this.onClick}
             >
-              Confirm
+              Создать
             </Button>
             <Button
               color="danger"
               onClick={this.closeModal}
             >
-              Close
+              Отменить
             </Button>
           </ModalFooter>
         </Modal>

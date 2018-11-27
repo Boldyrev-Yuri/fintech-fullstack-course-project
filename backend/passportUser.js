@@ -1,7 +1,7 @@
 import { Strategy as JWTStrategy, ExtractJwt as ExtractJWT } from 'passport-jwt';
 import mongoose from 'mongoose';
 const User = mongoose.model('Users');
-const opts = {};
+const opts = { ignoreExpiration: true };
 
 opts.jwtFromRequest = ExtractJWT.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = 'secret';

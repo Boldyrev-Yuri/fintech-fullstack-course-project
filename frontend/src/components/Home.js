@@ -5,14 +5,12 @@ import { connect } from 'react-redux';
 import { Card, CardTitle } from 'reactstrap';
 import TaskList from './TaskList';
 
-const Home = (props) => {
+const Home = props => {
   const { isAuthenticated } = props.auth;
   const defaultText = (
     <div className="container" style={{ marginTop: '40px', maxWidth: '700px' }}>
       <Card body outline color="primary">
-        <CardTitle>You have to Sign In in order to start using this app</CardTitle>
-        {/* <CardText>With supporting text below as a natural lead-in to additional content.</CardText> */}
-        {/* <Button color="secondary">Button</Button> */}
+        <CardTitle>Перед тем, как создать задачу, Вы должны войти в свой аккаунт или зарегистрироваться</CardTitle>
       </Card>
     </div>
   );

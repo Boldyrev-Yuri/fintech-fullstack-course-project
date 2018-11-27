@@ -77,7 +77,7 @@ class TaskEditForm extends Component {
       >
         <ModalBody>
           <FormGroup>
-            <Label for="taskDeadline">Deadline:</Label>
+            <Label for="taskDeadline">Дедлайн:</Label>
             <Datetime
               id="taskDeadline"
               name="taskDeadline"
@@ -91,11 +91,11 @@ class TaskEditForm extends Component {
             />
           </FormGroup>
           <FormGroup>
-            <Label for="taskName">Task: </Label>
+            <Label for="taskName">Название: </Label>
             <Input type="hidden" value={taskData._id} name="id"/>
             <Input
               type="text"
-              placeholder="Enter task"
+              placeholder="Введите название задачи"
               id="taskName"
               name="taskName"
               value={this.state.taskName}
@@ -103,10 +103,10 @@ class TaskEditForm extends Component {
             />
           </FormGroup>
           <FormGroup>
-            <Label for="taskDescription">Description: </Label>
+            <Label for="taskDescription">Описание: </Label>
             <Input
               type="textarea"
-              placeholder="Enter description"
+              placeholder="Введите описание задачи"
               name="taskDescription"
               id="taskDescription"
               value={this.state.taskDescription}
@@ -121,12 +121,12 @@ class TaskEditForm extends Component {
               checked={this.state.taskNotify}
               onChange={e => this.handleInputChange(e)}
             />
-            <Label for="taskNotify">Notify prior to 30 minutes</Label>
+            <Label for="taskNotify">Уведомить за 30 минут до окончания</Label>
           </FormGroup>
         </ModalBody>
         <ModalFooter>
-          <Button type="submit" color="success">Submit</Button>
-          <Button color="danger" onClick={this.hideEditModal}>Close</Button>
+          <Button type="submit" color="success">Изменить</Button>
+          <Button color="danger" onClick={this.hideEditModal}>Отменить</Button>
         </ModalFooter>
       </Form>
     );

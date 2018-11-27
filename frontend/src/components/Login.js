@@ -63,7 +63,7 @@ class Login extends Component {
     return (
       <div className="container" style={{ marginTop: '40px', maxWidth: '500px' }}>
         <Form onSubmit={this.handleSubmit}>
-          <h2 style={{ marginBottom: '20px' }}>Login</h2>
+          <h2 style={{ marginBottom: '20px' }}>Вход</h2>
           <FormGroup>
             <Label for="email">Email</Label>
             <Input
@@ -74,27 +74,31 @@ class Login extends Component {
               onChange={this.handleInputChange}
               value={this.state.email}
               className={classnames('form-control form-control-lg', {
-                'is-invalid': errors.email
+                'is-invalid': errors.email || errors.emailWrong || errors.emailEmpty
               })}
             />
+            {errors.emailEmpty && (<div className="invalid-feedback">{errors.emailEmpty}</div>)}
             {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
+            {errors.emailWrong && (<div className="invalid-feedback">{errors.emailWrong}</div>)}
           </FormGroup>
           <FormGroup>
-            <Label for="password">Password</Label>
+            <Label for="password">Пароль</Label>
             <Input
               type="password"
               name="password"
               id="password"
-              placeholder="Password"
+              placeholder="Пароль"
               onChange={this.handleInputChange}
               value={this.state.password}
               className={classnames('form-control form-control-lg', {
-                'is-invalid': errors.password
+                'is-invalid': errors.password || errors.passwordEmpty || errors.passwordLength
               })}
             />
+            {errors.passwordEmpty && (<div className="invalid-feedback">{errors.passwordEmpty}</div>)}
+            {errors.passwordLength && (<div className="invalid-feedback">{errors.passwordLength}</div>)}
             {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
           </FormGroup>
-          <Button color="primary">Submit</Button>
+          <Button color="primary">Войти</Button>
         </Form>
       </div>
     );

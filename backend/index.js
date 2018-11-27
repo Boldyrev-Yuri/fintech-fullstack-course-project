@@ -61,7 +61,7 @@ SourceMapSupport.install();
 
 // catch 404
 app.use((req, res, next) => {
-  res.status(404).send('<h2 align=center>Page Not Found! (404)</h2>');
+  res.status(404).send('<h2 align=center>Страница не найдена! (404)</h2>');
 });
 
 // start the server

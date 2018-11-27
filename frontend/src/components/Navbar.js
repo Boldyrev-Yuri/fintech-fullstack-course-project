@@ -44,10 +44,10 @@ class MyNavbar extends Component {
         </Nav>
         <Nav className="ml-auto">
           <NavItem>
-            <NavLink>Hello, {user.name}!</NavLink>
+            <NavLink>Добро пожаловать, {user.name}!</NavLink>
           </NavItem>
           <NavItem>
-            <NavLink href="#" onClick={e => this.onLogout(e)}>Log Out</NavLink>
+            <NavLink href="#" onClick={e => this.onLogout(e)}>Выйти</NavLink>
           </NavItem>
         </Nav>
       </React.Fragment>
@@ -55,10 +55,10 @@ class MyNavbar extends Component {
     const guestLinks = (
       <Nav className="ml-auto">
         <NavItem>
-          <NavLink tag={Link} to="/register">Sign Up</NavLink>
+          <NavLink tag={Link} to="/register">Регистрация</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink tag={Link} to="/login">Sign In</NavLink>
+          <NavLink tag={Link} to="/login">Вход</NavLink>
         </NavItem>
       </Nav>
     );

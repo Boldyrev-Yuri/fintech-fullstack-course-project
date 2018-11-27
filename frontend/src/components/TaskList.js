@@ -115,25 +115,33 @@ class TaskList extends Component {
             onClick={() => this.props.toggleFilter('SHOW_ACTIVE')}
             disabled={visibilityFilter === 'SHOW_ACTIVE'}
           >
-            Active
+            Текущие
           </Button>
           <Button
             color="info"
             onClick={() => this.props.toggleFilter('SHOW_COMPLETED')}
             disabled={visibilityFilter === 'SHOW_COMPLETED'}
           >
-            Completed
+            Выполненные
           </Button>
         </ButtonGroup>
         {!tasks && isFetching &&
-          <p>Loading tasks....</p>
+          <p>Загружаем задачи....</p>
         }
-        {tasks.length <= 0 && !isFetching && visibilityFilter === 'SHOW_ACTIVE' &&
-          <p>No active tasks available. Add a task to list here.</p>
-        }
-        {tasks.length <= 0 && !isFetching && visibilityFilter === 'SHOW_COMPLETED' &&
-          <p>You have no completed tasks available. Do some work first, please.</p>
-        }
+        {tasks.length <= 0 && !isFetching && visibilityFilter === 'SHOW_ACTIVE' && (
+          <div className="container" style={{ marginTop: '40px', maxWidth: '700px' }}>
+            <Card body outline color="primary">
+              <CardTitle>Текущих задач не найдено. Создайте новую задачу, и она появится здесь.</CardTitle>
+            </Card>
+          </div>
+        )}
+        {tasks.length <= 0 && !isFetching && visibilityFilter === 'SHOW_COMPLETED' && (
+          <div className="container" style={{ marginTop: '40px', maxWidth: '700px' }}>
+            <Card body outline color="primary">
+              <CardTitle>Выполненных задач не найдено. Сначала придется немного поработать :)</CardTitle>
+            </Card>
+          </div>
+        )}
         {tasks && tasks.length > 0 && !isFetching && (
           <div className="container">
             {tasks.map((task, i) => (
@@ -147,40 +155,40 @@ class TaskList extends Component {
                   <CardBody>
                     <CardTitle>{task.description}</CardTitle>
                     <CardText>
-                      <span>Created: {moment(task.createdAt).format('DD.MM.YYYY HH:mm:ss')}</span><br />
-                      <span>Deadline: {moment(task.deadline).format('DD.MM.YYYY HH:mm:ss')}</span><br />
+                      <span>Создана: {moment(task.createdAt).format('DD.MM.YYYY HH:mm:ss')}</span><br />
+                      <span>Дедлайн: {moment(task.deadline).format('DD.MM.YYYY HH:mm:ss')}</span><br />
                       {visibilityFilter !== 'SHOW_COMPLETED' && (
                         <React.Fragment>
-                          <span>Status: {task.status ? 'Done' : 'In progress'}</span><br />
-                          <span>Notify: {task.notify ? 'Yes' : 'No'}</span><br />
+                          <span>Статус: {task.status ? 'выполнена' : 'в процессе'}</span><br />
+                          <span>Уведомление: {task.notify ? 'да' : 'нет'}</span><br />
                           <Button
                             color="success"
                             onClick={() => this.showToggleModal(task)}
                           >
-                            Complete
+                            Выполнить
                           </Button>
                           <Button
                             color="warning"
                             onClick={() => this.showEditModal(task)}
                           >
-                            Change
+                            Изменить
                           </Button>
                           <Button
                             color="danger"
                             onClick={() => this.showDeleteModal(task)}
                           >
-                            Delete
+                            Удалить
                           </Button>
                         </React.Fragment>
                       )}
                       {visibilityFilter === 'SHOW_COMPLETED' && (
                         <React.Fragment>
-                          <span>Completed: {moment(task.updatedAt).format('DD.MM.YYYY HH:mm:ss')}</span><br />
+                          <span>Выполнена: {moment(task.updatedAt).format('DD.MM.YYYY HH:mm:ss')}</span><br />
                           <Button
                             color="danger"
                             onClick={() => this.showDeleteModal(task)}
                           >
-                            Delete
+                            Удалить
                           </Button>
                         </React.Fragment>
                       )}
@@ -196,9 +204,9 @@ class TaskList extends Component {
           isOpen={showEditModal}
           className="Modal"
         >
-          <ModalHeader>Change Task</ModalHeader>
+          <ModalHeader>Изменить задачу</ModalHeader>
           {taskToEdit &&
-            <TaskEditForm taskData={taskToEdit} editTask={this.submitEditTodo} hideEditModal={this.hideEditModal}/>
+            <TaskEditForm taskData={taskToEdit} hideEditModal={this.hideEditModal} />
           }
         </Modal>
 
@@ -206,12 +214,12 @@ class TaskList extends Component {
           isOpen={showDeleteModal}
           className="Modal"
         >
-          <ModalHeader>Delete Task</ModalHeader>
+          <ModalHeader>Удалить задачу</ModalHeader>
           <ModalBody>
             {taskToDelete && !isFetching && (
               <Alert color="warning">
                 <strong>{taskToDelete.name}</strong><br />
-                Are you sure you want to delete this task?
+                Вы уверены, что хотите удалить эту задачу?
               </Alert>
             )}
           </ModalBody>
@@ -225,13 +233,13 @@ class TaskList extends Component {
           isOpen={showToggleModal}
           className="Modal"
         >
-          <ModalHeader>Complete Task</ModalHeader>
+          <ModalHeader>Выполнить</ModalHeader>
           <ModalBody>
             {taskToToggle && !isFetching && (
               <Alert color="warning">
                 <strong>{taskToToggle.name} </strong><br />
-                Are you sure you want to mark this task as completed? <br />
-                <span>This action cannot be undone!</span>
+                Вы уверены, что хотите отметить данную задачу как выполненную? <br />
+                <span>Это действие нельзя изменить!</span>
               </Alert>
             )}
           </ModalBody>
