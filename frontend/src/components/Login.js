@@ -74,12 +74,13 @@ class Login extends Component {
               onChange={this.handleInputChange}
               value={this.state.email}
               className={classnames('form-control form-control-lg', {
-                'is-invalid': errors.email || errors.emailWrong || errors.emailEmpty
+                'is-invalid': errors.email || errors.emailWrong || errors.emailEmpty || errors.validate
               })}
             />
             {errors.emailEmpty && (<div className="invalid-feedback">{errors.emailEmpty}</div>)}
             {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
             {errors.emailWrong && (<div className="invalid-feedback">{errors.emailWrong}</div>)}
+            {errors.validate && (<div className="invalid-feedback">{errors.validate}</div>)}
           </FormGroup>
           <FormGroup>
             <Label for="password">Пароль</Label>

@@ -5,7 +5,7 @@ import logger from 'morgan';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import SourceMapSupport from 'source-map-support';
-// импортируем пути
+
 import connectString from './mongodbConnect';
 import taskRoutes from './routes/taskRoutes';
 import userRoutes from './routes/userRoutes';
@@ -28,15 +28,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Ошибка соединения с MongoDB'));
 
 app.use(passport.initialize());
-// require('./passportUser')(passport);
 passportUser(passport);
-
-// allow-cors
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//   next();
-// });
 
 // configure app
 app.use(logger('dev'));
@@ -49,9 +41,6 @@ app.get('/', (req, res) => {
 });
 app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes);
-
-// app.use('/tasks', taskRoutes);
-// app.use('/account', userRoutes);
 
 // set the port
 const PORT = process.env.PORT || 3001;
