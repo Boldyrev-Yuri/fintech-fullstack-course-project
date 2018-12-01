@@ -48,6 +48,7 @@ class TaskEditForm extends Component {
   }
 
   handleDateChange(date) {
+    console.log(this.state);
     this.setState({
       taskDeadline: date._d
     });
@@ -125,7 +126,13 @@ class TaskEditForm extends Component {
           </FormGroup>
         </ModalBody>
         <ModalFooter>
-          <Button type="submit" color="success">Изменить</Button>
+          <Button
+            type="submit"
+            color="success"
+            disabled={this.state.taskName === '' || this.state.taskDescription === '' || typeof this.state.taskDeadline === 'undefined'}
+          >
+            Изменить
+          </Button>
           <Button color="danger" onClick={this.hideEditModal}>Отменить</Button>
         </ModalFooter>
       </Form>

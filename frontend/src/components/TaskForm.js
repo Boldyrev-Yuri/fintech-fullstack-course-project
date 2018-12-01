@@ -161,6 +161,7 @@ class TaskForm extends Component {
             <Button
               color="success"
               onClick={this.onClick}
+              disabled={this.state.taskName === '' || this.state.taskDescription === '' || typeof this.state.taskDeadline === 'undefined'}
             >
               Создать
             </Button>

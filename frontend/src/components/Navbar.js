@@ -24,7 +24,7 @@ class MyNavbar extends Component {
 
   onLogout(e) {
     e.preventDefault();
-    this.props.logoutUser(this.props.history);
+    this.props.logoutUser();
   }
 
   toggle() {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as moment from 'moment';
+import moment from 'moment';
 import {
   Modal,
   ModalHeader,
@@ -96,7 +96,6 @@ class TaskList extends Component {
   render() {
     const taskState = this.props.tasks;
     const {
-      tasks,
       isFetching,
       showDeleteModal,
       showEditModal,
@@ -106,6 +105,24 @@ class TaskList extends Component {
       taskToToggle,
       showToggleModal
     } = taskState;
+    let { tasks } = taskState;
+
+    if (visibilityFilter === 'SHOW_ACTIVE') {
+      tasks.sort((a, b) => {
+        return a.deadline - b.deadline;
+      });
+    } else if (visibilityFilter === 'SHOW_COMPLETED') {
+      tasks.sort((a, b) => {
+        const ms = moment(b.createdAt).diff(moment(a.createdAt));
+        const d = moment.duration(ms);
+        const s = Math.floor(d.asHours()) + moment.utc(ms).format(':mm:ss');
+
+        if (String(s)[0] === '-') {
+          return -1;
+        }
+        return 1;
+      });
+    }
 
     return (
       <div className="text-center">
@@ -125,9 +142,9 @@ class TaskList extends Component {
             Выполненные
           </Button>
         </ButtonGroup>
-        {!tasks && isFetching &&
+        {!tasks && isFetching && (
           <p>Загружаем задачи....</p>
-        }
+        )}
         {tasks.length <= 0 && !isFetching && visibilityFilter === 'SHOW_ACTIVE' && (
           <div className="container" style={{ marginTop: '40px', maxWidth: '700px' }}>
             <Card body outline color="primary">
@@ -205,9 +222,9 @@ class TaskList extends Component {
           className="Modal"
         >
           <ModalHeader>Изменить задачу</ModalHeader>
-          {taskToEdit &&
+          {taskToEdit && (
             <TaskEditForm taskData={taskToEdit} hideEditModal={this.hideEditModal} />
-          }
+          )}
         </Modal>
 
         <Modal

@@ -26,6 +26,11 @@ const TaskSchema = new Schema({
   notify: {
     type: Boolean,
     required: true
+  },
+  notified: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 }, { timestamps: true });
 

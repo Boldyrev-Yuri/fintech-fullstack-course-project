@@ -10,19 +10,14 @@ router.post('/add', (req, res) => {
     deadline: req.body.deadline,
     userId: req.body.userId
   }).then(foundTask => {
-    if (foundTask) {
-      return res.status(400).json({
-        name: 'У вас уже есть такая задача :('
-      });
-    }
-
     const newTask = new Task({
       name: req.body.name,
       description: req.body.description,
       deadline: req.body.deadline,
       userId: req.body.userId,
       status: false,
-      notify: req.body.notify
+      notify: req.body.notify,
+      notified: false
     });
 
     newTask.save().then(task => {
@@ -51,7 +46,8 @@ router.post('/edit', (req, res) => {
     name: req.body.name,
     description: req.body.description,
     deadline: req.body.deadline,
-    notify: req.body.notify
+    notify: req.body.notify,
+    notified: false
   }, { new: true })
     .then(foundTask => {
       return res.json(foundTask);
